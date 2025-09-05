@@ -47,3 +47,12 @@ spm_edges.tsv — list of significant edges (with correlation sign).
 spm_nodes.tsv — ranked residue importance scores.
 
 spm.pml — PyMOL script for network visualization.
+
+
+
+📖 Reference
+
+Bocchinfuso, G. et al. (2017)
+SPMweb: A web server for analyzing protein communication and correlation networks.
+Nucleic Acids Research, 45(W1), W482–W488.
+https://doi.org/10.1093/nar/gkx439
