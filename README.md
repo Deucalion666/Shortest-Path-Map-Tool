@@ -1,58 +1,72 @@
-# Shortest-Path-Map-Tool
-SPMweb is a webserver for the Shortest Path Map (SPM) tool, which identifies key conformationally-relevant positions in enzymes. It helps in computational enzyme design by pinpointing distal positions connected to the active site. Freely available for academia.
+# 🧬 SPM-PyMOL: Local Shortest Path Map (SPM) Generator
 
-🧬 SPM-PyMOL: Local Shortest Path Map (SPM) Generator
+**SPM-PyMOL** provides a command-line and Jupyter-friendly Python implementation of the **Shortest Path Map (SPM)** method for analyzing protein dynamics from molecular dynamics (MD) simulations.  
+It reproduces the core ideas of the SPMweb tool locally and extends it with **direct PyMOL visualization scripts**.
 
-This repository provides a command-line and Jupyter-friendly Python implementation of the Shortest Path Map (SPM) method for analyzing protein dynamics from molecular dynamics (MD) simulations.
+---
 
-It reproduces the core ideas of the SPMweb tool (Bocchinfuso et al., 2017)
- in a local, scriptable workflow, and extends it with direct PyMOL visualization scripts.
+## ✨ Features
 
-✨ Features
+### 🧩 SPM Network Construction
+- Builds **residue–residue communication networks** from distance and cross-correlation matrices.
+- Supports both **`.npy` (NumPy)** and **`.dat` (whitespace text)** matrix formats.
 
-SPM network construction
+### 🎯 Threshold Control
+| Parameter | Description | Default |
+|-----------|-------------|---------|
+| `-t` Distance cutoff | Defines which residue pairs are connected in the initial graph | 6 Å |
+| `-s` Significance cutoff | Filters edges based on their contribution to shortest paths | 0.3 |
 
-Builds residue–residue communication networks from distance and cross-correlation matrices.
+### 📊 Network Analysis
+- **Normalizes edge usage** in shortest paths.
+- Computes **per-residue importance scores**.
 
-Supports .npy (NumPy) and .dat (whitespace text) matrix formats.
+### 🔬 PyMOL Visualization
+- Exports a **`.pml` script** in SPMweb style for visualization.
+- **Residues** → spheres, scaled by importance score.
+- **Edges** → sticks, scaled by significance.
+- **Color coding:** `blue` = positive correlations, `red` = negative correlations.
+- All edges grouped into a `PATH_<pdb>` object for easy toggling.
 
-Threshold control
+---
 
-Distance cutoff (-t) defines which residue pairs are connected.
+## 📂 Outputs
 
-Significance cutoff (-s) filters edges by their contribution to shortest paths.
+| File | Description |
+|------|-------------|
+| `spm_edges.tsv` | Tab-separated list of significant edges, including correlation sign |
+| `spm_nodes.tsv` | Tab-separated list of residues ranked by importance score |
+| `spm.pml` | PyMOL script for network visualization on the protein structure |
 
-Network analysis
+---
 
-Normalizes edge usage in shortest paths.
+## 📖 Background on SPM
 
-Computes per-residue importance scores.
+The **Shortest Path Map (SPM)** method simplifies a protein's **structure and dynamics** into a **weighted graph**:
 
-PyMOL visualization
+- **Nodes:** residues  
+- **Edges:** weighted by distance and correlation of residue movements during MD simulations  
+- **Edge weight:**  
 
-Exports .pml script in the SPMweb style:
+\[
+\mathbf{l_{ij}} = -\log(|c_{ij}|)
+\]
 
-Residues shown as spheres (scaled by importance).
+where \( c_{ij} \) is the correlation between **C\(_\alpha\)** displacements of residues \( i \) and \( j \).  
 
-Edges shown as sticks (scaled by significance).
+- Shortest paths are computed using **Dijkstra's algorithm**.  
+- The resulting SPM highlights **critical residues** that are highly correlated and strongly impact conformational dynamics — useful for identifying **mutation hotspots in enzyme design**.
 
-Color coding: blue = positive correlations, red = negative correlations.
+---
 
-Groups all edges into a PATH_<pdb> object for easy toggling.
+## 📝 Inputs Required by SPMweb
+1. **Protein structure file:** `.pdb`  
+2. **Distance matrix:** `.dat` or `.npy` from MD simulation  
+3. **Correlation matrix:** `.dat` or `.npy` from MD simulation
 
-Outputs
+---
 
-spm_edges.tsv — list of significant edges (with correlation sign).
+## 🚀 Usage Example
 
-spm_nodes.tsv — ranked residue importance scores.
-
-spm.pml — PyMOL script for network visualization.
-
-
-
-📖 Reference
-
-Bocchinfuso, G. et al. (2017)
-SPMweb: A web server for analyzing protein communication and correlation networks.
-Nucleic Acids Research, 45(W1), W482–W488.
-https://doi.org/10.1093/nar/gkx439
+```bash
+python spm.py -d distance_matrix.npy -c correlation_matrix.npy -p structure.pdb -t 6 -s 0.3
