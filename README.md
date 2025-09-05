@@ -1,7 +1,9 @@
 # 🧬 SPM-PyMOL: Local Shortest Path Map (SPM) Generator
 
 **SPM-PyMOL** provides a command-line and Jupyter-friendly Python implementation of the **Shortest Path Map (SPM)** method for analyzing protein dynamics from molecular dynamics (MD) simulations.  
-It reproduces the core ideas of the SPMweb tool locally and extends it with **direct PyMOL visualization scripts**.
+
+It reproduces the core ideas of the SPMweb tool ([Bocchinfuso et al., 2017](https://doi.org/10.1093/bioinformatics/btx305)) in a local, scriptable workflow.
+
 
 ---
 
